@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Estilos de Aprendizaje - Kolb</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 600px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h2 { text-align: center; }
+        .question { margin-bottom: 15px; }
+        .result { margin-top: 20px; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Test de Estilos de Aprendizaje - Kolb</h2>
+        <form id="kolbTest">
+            <p>Distribuye 4 puntos entre las cuatro opciones de cada pregunta.</p>
+            <script>
+                const questions = [
+                    "Cuando aprendo, prefiero:",
+                    "Aprendo mejor cuando:",
+                    "Cuando aprendo, me gusta:",
+                    "Cuando aprendo algo nuevo, prefiero:",
+                    "Cuando estoy aprendiendo, valoro más:",
+                    "Aprendo más cuando:",
+                    "Cuando enfrento un problema:",
+                    "Para mí, el aprendizaje significa:",
+                    "En el proceso de aprendizaje, prefiero:"
+                ];
+                const options = [
+                    ["Afectivamente", "Observando", "Analíticamente", "Activamente"],
+                    ["Intuitivamente", "Paciente y reflexivo", "Lógico y estructurado", "Experimentando"],
+                    ["Personalizar la experiencia", "Percibir el conjunto", "Buscar principios y teorías", "Ir directo a la acción"],
+                    ["Explorar nuevas posibilidades", "Observar y reflexionar antes de actuar", "Analizar los datos antes de sacar conclusiones", "Aplicarlo inmediatamente"],
+                    ["Las experiencias personales", "Ver diferentes perspectivas", "El razonamiento lógico", "Probar y poner en práctica"],
+                    ["Me conecto con los demás", "Observo situaciones antes de actuar", "Analizo la información y busco patrones", "Me lanzo a la acción de inmediato"],
+                    ["Confío en mis emociones y empatía", "Analizo todas las opciones antes de decidir", "Busco modelos y principios teóricos", "Pruebo soluciones en la práctica"],
+                    ["Exploración personal y significado", "Observar y encontrar patrones", "Comprender las ideas a un nivel profundo", "Aplicar el conocimiento de forma práctica"],
+                    ["Relacionarme y vivir experiencias", "Tomarme mi tiempo para analizar lo aprendido", "Comprender conceptos estructurados", "Hacer pruebas y ajustes en el momento"]
+                ];
+                let formHtml = "";
+                questions.forEach((question, index) => {
+                    formHtml += `<div class='question'><p>${index + 1}. ${question}</p>`;
+                    options[index].forEach((option, optionIndex) => {
+                        formHtml += `<input type='number' name='q${index + 1}' min='0' max='4' required> ${option}<br>`;
+                    });
+                    formHtml += "</div>";
+                });
+                document.write(formHtml);
+            </script>
+            <button type="button" onclick="calcularResultado()">Calcular Resultado</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        function calcularResultado() {
+            let form = document.getElementById("kolbTest");
+            let inputs = form.getElementsByTagName("input");
+            let scores = { EC: 0, OR: 0, CA: 0, EA: 0 };
+            for (let i = 0; i < inputs.length; i++) {
+                let value = parseInt(inputs[i].value) || 0;
+                let index = i % 4;
+                if (index === 0) scores.EC += value;
+                if (index === 1) scores.OR += value;
+                if (index === 2) scores.CA += value;
+                if (index === 3) scores.EA += value;
+            }
+            let ca_ce = scores.CA - scores.EC;
+            let ea_or = scores.EA - scores.OR;
+            let estilo = "";
+            if (ca_ce > 0 && ea_or < 0) estilo = "Asimilador";
+            if (ca_ce > 0 && ea_or > 0) estilo = "Convergente";
+            if (ca_ce < 0 && ea_or < 0) estilo = "Divergente";
+            if (ca_ce < 0 && ea_or > 0) estilo = "Acomodador";
+            document.getElementById("result").innerHTML = "Tu estilo de aprendizaje es: " + estilo;
+        }
+    </script>
+</body>
+</html>
